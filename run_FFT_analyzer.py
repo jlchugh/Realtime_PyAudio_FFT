@@ -1,6 +1,7 @@
 import argparse
 from src.stream_analyzer import Stream_Analyzer
 import time
+import pyaudio
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -26,6 +27,14 @@ def convert_window_ratio(window_ratio):
             raise ValueError('window_ratio should be in the format: float/float')
         return float_ratio
     raise ValueError('window_ratio should be in the format: float/float')
+
+
+def print_devices():
+    p = pyaudio.PyAudio()
+
+    for i in range(p.get_device_count()):
+        device_dict = p.get_device_info_by_index(i)
+        print("index: {:>2} --- device: {}".format(device_dict['index'], device_dict['name']))
 
 def run_FFT_analyzer():
     args = parse_args()
@@ -54,4 +63,5 @@ def run_FFT_analyzer():
             time.sleep(((1./fps)-(time.time()-last_update)) * 0.99)
 
 if __name__ == '__main__':
+    print_devices()
     run_FFT_analyzer()
